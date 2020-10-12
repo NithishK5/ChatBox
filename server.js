@@ -27,10 +27,17 @@ io.on('connection', socket => {
     // Broadcast when a user connects
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.username} has joined the chat!` ));
     
+    // Send users and room info
+        io.to(user.room).emit('roomUsers',{
+        room: user.room,
+        users: getRoomUsers(user.room)
+
+        });
+
     }); 
 
-// Listen for chat messaage
-    socket.on('chatMessage', (msg) => {
+    // Listen for chat messaage
+        socket.on('chatMessage', (msg) => {
         const user = getCurrentUser(socket.id);
         io.to(user.room).emit('message', formatMessage(user.username,msg));
         
@@ -42,6 +49,13 @@ socket.on('disconnect', () => {
 
     if(user) {
         io.to(user.room).emit('message', formatMessage(botName, `${user.username} has left the chat`));
+
+    // Send users and room info
+    io.to(user.room).emit('roomUsers',{
+        room: user.room,
+        users: getRoomUsers(user.room)
+
+            });
 
         }
     
