@@ -72,5 +72,6 @@ function outputUsers(users) {
       const li = document.createElement('li');
       li.innerText = user.username;
       userList.appendChild(li);
+
     });
-   }
+}
